@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en" oncontextmenu="return false">
+
+<head oncontextmenu="return false">
+  <meta charset="utf-8" />
+  <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#000000" />
+  <meta name="description" content="Web site created using create-react-app" />
+  <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+  <!--
+      manifest.json provides metadata used when your web app is installed on a
+      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
+    -->
+  <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+  <!--
+      Notice the use of %PUBLIC_URL% in the tags above.
+      It will be replaced with the URL of the `public` folder during the build.
+      Only files inside the `public` folder can be referenced from the HTML.
+
+      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
+      work correctly both with client-side routing and a non-root public URL.
+      Learn how to configure a non-root public URL by running `npm run build`.
+    -->
+  <title id="tab_title">BloodHelper</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script>
+    /*!
+devtools-detect
+https://github.com/sindresorhus/devtools-detect
+By Sindre Sorhus
+MIT License
+*/
+
+    const devtools = {
+      isOpen: false,
+      orientation: undefined,
+    };
+
+    const threshold = 160;
+
+    const emitEvent = (isOpen, orientation) => {
+      globalThis.dispatchEvent(new globalThis.CustomEvent('devtoolschange', {
+        detail: {
+          isOpen,
+          orientation,
+        },
+      }));
+    };
+
+    const main = ({ emitEvents = true } = {}) => {
+      const widthThreshold = globalThis.outerWidth - globalThis.innerWidth > threshold;
+      const heightThreshold = globalThis.outerHeight - globalThis.innerHeight > threshold;
+      const orientation = widthThreshold ? 'vertical' : 'horizontal';
+
+      if (
+        !(heightThreshold && widthThreshold)
+        && ((globalThis.Firebug && globalThis.Firebug.chrome && globalThis.Firebug.chrome.isInitialized) || widthThreshold || heightThreshold)
+      ) {
+        if ((!devtools.isOpen || devtools.orientation !== orientation) && emitEvents) {
+          emitEvent(true, orientation);
+        }
+
+        devtools.isOpen = true;
+        devtools.orientation = orientation;
+      } else {
+        if (devtools.isOpen && emitEvents) {
+          emitEvent(false, undefined);
+        }
+
+        devtools.isOpen = false;
+        devtools.orientation = undefined;
+      }
+    };
+
+    main({ emitEvents: false });
+    setInterval(main, 500);
+
+    export default devtools;
+  </script>
+  <script>
+    document.onkeydown = function (e) {
+      if (event.keyCode == 123) {
+        return false;
+      }
+      if (e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) {
+        return false;
+      }
+      if (e.ctrlKey && e.shiftKey && e.keyCode == 'C'.charCodeAt(0)) {
+        return false;
+      }
+      if (e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) {
+        return false;
+      }
+      if (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) {
+        return false;
+      }
+    }
+
+    if (devtools.isOpen) {
+      while (true) {
+        console.log("access denied")
+      }
+    }
+  </script>
+</head>
+
+<body oncontextmenu="return false">
+  <noscript>You need to enable JavaScript to run this app.</noscript>
+  <div id="root"></div>
+  <!--
+      This HTML file is a template.
+      If you open it directly in the browser, you will see an empty page.
+
+      You can add webfonts, meta tags, or analytics to this file.
+      The build step will place the bundled scripts into the <body> tag.
+
+      To begin the development, run `npm start` or `yarn start`.
+      To create a production bundle, use `npm run build` or `yarn build`.
+    -->
+
+  <script src="https://unpkg.com/react/umd/react.production.min.js" crossorigin></script>
+
+  <script src="https://unpkg.com/react-dom/umd/react-dom.production.min.js" crossorigin></script>
+
+  <script src="https://unpkg.com/react-bootstrap@next/dist/react-bootstrap.min.js" crossorigin></script>
+</body>
+
+</html>
