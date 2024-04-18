@@ -1,43 +1,34 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import '../App.css'
 
-class Start extends React.Component {
+function Start() {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            loading: 'Loading...',
-            loadingColor: 'black',
-            count: 0,
-        }
-    }
+    const [loading, setLoading] = useState('Loading...')
+    const [count, setCount] = useState(0)
 
-    componentDidMount = () => {
-            setInterval(() => {
-                this.setState({ loading: 'Loading...', loadingColor: 'red' });
+    useEffect(() => {
+        setInterval(() => {
+            setLoading('Loading...');
+            setTimeout(() => {
+                setLoading('Loading..');
                 setTimeout(() => {
-                    this.setState({ loading: 'Loading..', loadingColor: 'green'  });
-                    setTimeout(() => {
-                        this.setState({ loading: 'Loading.', loadingColor: 'blue', count: this.state.count + 1  });
-                    }, 500)
+                    setLoading('Loading.');
+                    setCount(count + 1);
                 }, 500)
-            }, 1500)
+            }, 500)
+        }, 1500)
 
-            setInterval(() => {
-                if(this.state.count >= 1){
-                    window.location.href = '/home';
-                }
-            }, 100);
-    }
+        setInterval(() => {
+                window.location.href = '/home';
+        }, 200);
+    }, [])
 
-    render() {
-        return (
-            <div className="content" style={{ textAlign: 'center', color: 'black' }}>
-                <h2 style={{color: this.state.loadingColor}}>Hotel Booking App</h2>
-                <h1 style={{fontSize: '60px', color: this.state.loadingColor}}>{this.state.loading}</h1>
-            </div>
-        )
-    }
+    return (
+        <div className="content" style={{ textAlign: 'center', color: 'black' }}>
+            <h2>Hotel Booking App</h2>
+            <h1 style={{ fontSize: '60px' }}>{loading}</h1>
+        </div>
+    )
 }
 
 export default Start

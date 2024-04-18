@@ -1,21 +1,16 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import '../styles/register.css';
 import firebase from 'firebase';
 import swal from 'sweetalert';
 
-export default class Login extends Component {
+export default function Login() {
 
-    constructor(props){
-        super(props);
-        this.state = {
-            email: '',
-            password: '',
-        }
-    }
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
 
-    signInWithEmail = () => {
+    function signInWithEmail() {
         document.getElementById('spinner').style.display = 'block';
-        firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
+        firebase.auth().signInWithEmailAndPassword(email, password)
         .then((userCredential) => {
           // Signed in
           var user = userCredential.user;
@@ -31,7 +26,7 @@ export default class Login extends Component {
         });
     }
 
-    signInWithGoogle = () => {
+    function signInWithGoogle() {
         var provider = new firebase.auth.GoogleAuthProvider();
         firebase.auth()
             .signInWithPopup(provider)
@@ -50,7 +45,7 @@ export default class Login extends Component {
             });
     }
 
-    signInWithFacebook = () => {
+    function signInWithFacebook() {
         var provider = new firebase.auth.FacebookAuthProvider();
         firebase
             .auth()
@@ -83,7 +78,7 @@ export default class Login extends Component {
             });
     }
 
-    signInWithGithub = () => {
+    function signInWithGithub() {
         var provider = new firebase.auth.GithubAuthProvider();
         firebase
         .auth()
@@ -115,8 +110,7 @@ export default class Login extends Component {
         });      
     }
 
-    render() {
-        return (
+    return (
             <section className="login-block">
                 <div className="container-fluid">
                     <div className="row">
@@ -128,26 +122,26 @@ export default class Login extends Component {
                                                 <h3 className="text-center heading">Login to book hotels</h3>
                                             </div>
                                         </div>
-                                        <div className="form-group form-primary"> <input type="text" className="form-control" name="email" value={this.state.email} placeholder="Email" id="email" onChange={(e)=>this.setState({email: e.target.value})} /> </div>
-                                        <div className="form-group form-primary"> <input type="password" className="form-control" name="password" placeholder="Password" value={this.state.password} id="password" onChange={(e)=>this.setState({password: e.target.value})} /> </div>
+                                        <div className="form-group form-primary"> <input type="text" className="form-control" name="email" value={email} placeholder="Email" id="email" onChange={(e)=> setEmail(email)} /> </div>
+                                        <div className="form-group form-primary"> <input type="password" className="form-control" name="password" placeholder="Password" value={password} id="password" onChange={(e)=> setPassword(password)} /> </div>
                                         <div className="row">
-                                            <button className="btn btn-primary btn-md btn-block waves-effect text-center m-b-20" name="submit" value="Login" onClick={()=>this.signInWithEmail()}><span className="spinner-border spinner-border-sm" role="status" id='spinner' style={{display: 'none'}} aria-hidden="true"></span> Login Using Email/Password</button>                                        </div>
+                                            <button className="btn btn-primary btn-md btn-block waves-effect text-center m-b-20" name="submit" value="Login" onClick={()=>signInWithEmail()}><span className="spinner-border spinner-border-sm" role="status" id='spinner' style={{display: 'none'}} aria-hidden="true"></span> Login Using Email/Password</button>                                        </div>
                                         <div className="or-container">
                                             <div className="line-separator"></div>
                                             <div className="or-label">or</div>
                                             <div className="line-separator"></div>
                                         </div>
                                         <div className="row">
-                                            <button className="btn btn-lg btn-google btn-block btn-outline" onClick={() => this.signInWithGoogle()}><img src="https://img.icons8.com/color/16/000000/google-logo.png" /> Login Using Google</button>
+                                            <button className="btn btn-lg btn-google btn-block btn-outline" onClick={() => signInWithGoogle()}><img src="https://img.icons8.com/color/16/000000/google-logo.png" /> Login Using Google</button>
                                             <br />
                                             <div className="line-separator"></div>
                                             <div className="line-separator"></div>
                                             <div className="line-separator"></div>
-                                            <button className="btn btn-lg btn-facebook btn-block btn-outline" onClick={() => this.signInWithFacebook()}><img src="https://pnggrid.com/wp-content/uploads/2021/05/Facebook-logo-2021.png" width={19} height={19} /> Login Using Facebook</button>
+                                            <button className="btn btn-lg btn-facebook btn-block btn-outline" onClick={() => signInWithFacebook()}><img src="https://static.vecteezy.com/system/resources/previews/023/986/613/non_2x/facebook-logo-facebook-logo-transparent-facebook-icon-transparent-free-free-png.png" width={19} height={19} /> Login Using Facebook</button>
                                             <div className="line-separator"></div>
                                         <div className="line-separator"></div>
                                         <div className="line-separator"></div>
-                                        <button className="btn btn-lg btn-github btn-block btn-outline" onClick={() => this.signInWithGithub()}><img src="https://pbs.twimg.com/profile_images/1414990564408262661/r6YemvF9_400x400.jpg" width={19} height={19} /> Login Using Github</button>
+                                        <button className="btn btn-lg btn-github btn-block btn-outline" onClick={() => signInWithGithub()}><img src="https://cdn-icons-png.flaticon.com/512/25/25231.png" width={19} height={19} /> Login Using Github</button>
                                         </div> <br />
                                         <p className="text-inverse text-center">Don't have an account? <a href="/register" data-abc="true">Signup</a></p>
                                     </div>
@@ -157,5 +151,4 @@ export default class Login extends Component {
                 </div>
             </section>
         )
-    }
 }

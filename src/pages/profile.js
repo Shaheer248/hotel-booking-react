@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import '../App.css'
 import { Nav, Navbar, Container, Card, Button} from 'react-bootstrap'
 import Cover from '../imgs/cover.jpg';
@@ -7,28 +7,22 @@ import firebase from 'firebase/app';
 import 'firebase/database';
 import swal from "sweetalert";
 
-class Home extends React.Component {
+function Home() {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            user: '',
-            hotels: [],
-            hotelsbk: [],
-        }
-    }
+    const [user, setUser] = useState('');
+    const [hotels, setHotels] = useState([]);
+    const [hotelsbk, setHotelsbk] = useState([]);
 
-    componentDidMount = async() => {
+    useEffect(async()=>{
         const loginuser = localStorage.getItem('user');
-        this.setState({ user: loginuser, })
-
+        setUser(loginuser)
         await firebase.database().ref('listings').on('child_added', (snapshot) => {
             const snap = snapshot.val();
             if(snap.user == loginuser){
-            var newStateArray = this.state.hotels.slice();
-            newStateArray.push({ id: this.state.hotels.length + 1, name: snap.hotelname, user: snap.user, contact: snap.contact, address: snap.address, ca: snap.ca, cb: snap.cb, rooms: snap.rooms, restrooms: snap.restrooms });
-            this.setState({ hotels: newStateArray, });
-            console.log(this.state.hotels)
+            var newStateArray = hotels.slice();
+            newStateArray.push({ id: hotels.length + 1, name: snap.hotelname, user: snap.user, contact: snap.contact, address: snap.address, ca: snap.ca, cb: snap.cb, rooms: snap.rooms, restrooms: snap.restrooms });
+            setHotels(newStateArray)
+            console.log(hotels)
             }
         });
 
@@ -38,15 +32,14 @@ class Home extends React.Component {
             await firebase.database().ref('listings').on('child_added', (snapshot) => {
                 const snap = snapshot.val();
                 if(snap.dbID == id){
-                var newStateArray = this.state.hotelsbk.slice();
-                newStateArray.push({ id: this.state.hotelsbk.length + 1, name: snap.hotelname, user: snap.user, contact: snap.contact, address: snap.address, ca: snap.ca, cb: snap.cb, rooms: snap.rooms, restrooms: snap.restrooms });
-                this.setState({ hotelsbk: newStateArray, });
+                var newStateArray = hotelsbk.slice();
+                newStateArray.push({ id: hotelsbk.length + 1, name: snap.hotelname, user: snap.user, contact: snap.contact, address: snap.address, ca: snap.ca, cb: snap.cb, rooms: snap.rooms, restrooms: snap.restrooms });
+                setHotelsbk(newStateArray)
                 }
             });
         })
-    }
+    }, [])
 
-    render() {
             return (
                 <>
                     <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
@@ -60,7 +53,7 @@ class Home extends React.Component {
                                     <Nav.Link href="/login" style={{color: 'red'}}>Goto Login</Nav.Link>
                                 </Nav>
                                 <Nav>
-                                    <Nav.Link href="" style={{ fontWeight: 'bold', color: 'white' }}>View/Edit Profile ({this.state.user})</Nav.Link>
+                                    <Nav.Link href="" style={{ fontWeight: 'bold', color: 'white' }}>View/Edit Profile ({user})</Nav.Link>
                                 </Nav>
                             </Navbar.Collapse>
                         </Container>
@@ -68,7 +61,7 @@ class Home extends React.Component {
                     <hr />
                     <div id="listing" style={{ position: 'absolute', left: '25px' }}>
                         <h1>Edit Your listings:</h1>
-                        {this.state.hotels.map((i, v) => {
+                        {hotels.map((i, v) => {
                             return (
                                 <>
                                     <Card style={{ width: '18rem', display: 'inline-block' }} key={i+v+'key'}>
@@ -88,7 +81,7 @@ class Home extends React.Component {
                     </div>
                     <div id="listing" style={{ position: 'absolute', left: '25px', top: '64%' }}>
                         <h1>Hotels you have booked:</h1>
-                        {this.state.hotelsbk.map((i, v) => {
+                        {hotelsbk.map((i, v) => {
                             return (
                                 <>
                                     <Card style={{ width: '18rem', display: 'inline-block' }} key={i+v+'key'}>
@@ -107,7 +100,6 @@ class Home extends React.Component {
                     </div>
                 </>
             )
-    }
 }
 
 export default Home

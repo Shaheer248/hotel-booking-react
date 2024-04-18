@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import '../App.css'
 import { Nav, Navbar, Container, Card, Button } from 'react-bootstrap'
 import Cover from '../imgs/cover.jpg';
@@ -6,32 +6,25 @@ import '../App.css';
 import firebase from 'firebase/app';
 import 'firebase/database';
 
-class Home extends React.Component {
+function Home() {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            user: '',
-            hotels: [],
-        }
-    }
+    const [user, setUser] = useState('')
+    const [hotels, setHotels] = useState([])
 
-    componentDidMount = () => {
+    useEffect(()=>{
         const loginuser = localStorage.getItem('user');
-        this.setState({ user: loginuser, })
-
+        setUser(loginuser)
         firebase.database().ref('listings').on('child_added', (snapshot) => {
             const snap = snapshot.val();
-            var newStateArray = this.state.hotels.slice();
+            var newStateArray = hotels.slice();
             if(snap.user == loginuser){}else{
-            newStateArray.push({ id: this.state.hotels.length + 1, dbID: snap.dbID, name: snap.hotelname, user: snap.user, contact: snap.contact, address: snap.address, ca: snap.ca, cb: snap.cb, rooms: snap.rooms, restrooms: snap.restrooms, price: snap.price });
-            this.setState({ hotels: newStateArray, });
-            console.log(this.state.hotels)
+            newStateArray.push({ id: hotels.length + 1, dbID: snap.dbID, name: snap.hotelname, user: snap.user, contact: snap.contact, address: snap.address, ca: snap.ca, cb: snap.cb, rooms: snap.rooms, restrooms: snap.restrooms, price: snap.price });
+            setHotels(newStateArray)
+            console.log(hotels)
             }
         });
-    }
+    }, [])
 
-    render() {
         if (localStorage.getItem('user') == '' || localStorage.getItem('user') == ' ' || localStorage.getItem('user') == null || localStorage.getItem('user') == undefined) {
             return (
                 <>
@@ -58,7 +51,7 @@ class Home extends React.Component {
                     <hr />
                     <div id="listing" style={{ position: 'absolute', left: '25px' }}>
                         <h1>Hotel listings:</h1>
-                        {this.state.hotels.map((i, v) => {
+                        {hotels.map((i, v) => {
                             return (
                                 <>
                                     <Card style={{ width: '18rem', display: 'inline-block' }} key={i+v+'key'}>
@@ -92,7 +85,7 @@ class Home extends React.Component {
                                     <Nav.Link href="/add">Add Your Own Listing</Nav.Link>
                                 </Nav>
                                 <Nav>
-                                <Nav.Link href="/profile" style={{ fontWeight: 'bold',}}>View/Edit Profile ({this.state.user})</Nav.Link>
+                                <Nav.Link href="/profile" style={{ fontWeight: 'bold',}}>View/Edit Profile ({user})</Nav.Link>
                                 </Nav>
                             </Navbar.Collapse>
                         </Container>
@@ -104,7 +97,7 @@ class Home extends React.Component {
                     <hr />
                     <div id="listing" style={{ position: 'absolute', left: '25px' }}>
                         <h1>Hotel listings:</h1>
-                        {this.state.hotels.map((i, v) => {
+                        {hotels.map((i, v) => {
                             return (
                                 <>
                                     <Card style={{ width: '18rem', display: 'inline-block' }} key={i+v+'key'}>
@@ -126,7 +119,6 @@ class Home extends React.Component {
                 </>
             )
         }
-    }
 }
 
 export default Home
